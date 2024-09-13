@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "BO Online Extensions",
+  "version": "1.0",
+  "description": "セットの金額を計算",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://shopping.bookoff.co.jp/s/*"
+  ],
+  "permissions": [
+    "activeTab",
+    "tabs"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://shopping.bookoff.co.jp/s/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
