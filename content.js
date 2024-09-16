@@ -4,9 +4,44 @@ function getElementByXPath(xpath, doc) {
   return result.singleNodeValue;
 }
 
+function createListText(end, price, data) {
+  let list = '<div class="productPurchase__list">';
+  for (let i = 0; i < end; i++) {
+    list += `<div class="productPurchase__listItem"><dt>${i+1}巻</dt><dd class=${data[i].isNew ? "list_new_price_ex" : "list_old_price_ex"}>¥<span>${price[i]}</span></dd></div>`;
+  }
+  list += "</div>";
+  return list;
+}
+
+function calcTotalPrice(end, price) {
+  let totalPrice = 0;
+  
+  for (let i = 0; i < end; i++) {
+    totalPrice += price[i];
+  }
+
+  totalPrice = Math.round(totalPrice / 100) * 100;
+
+  return totalPrice.toLocaleString();
+}
+
+function changeTotalPrice(value, price, data) {
+  const totalPrice = calcTotalPrice(value, price);
+  const targetElement = document.querySelector('.list_item_ex');
+  const listText = createListText(value, price, data);
+  const listElement = document.createElement('div');
+  listElement.innerHTML = listText;
+
+  const totalPriceElement = document.querySelector('.calc_total_price_ex');
+  if (totalPriceElement) {
+    totalPriceElement.textContent = "¥" + totalPrice;
+  }
+  if (targetElement) {
+    targetElement.replaceChild(listElement, targetElement.lastChild);
+  } 
+}
+
 const url = window.location.href;
-const start = 1;
-const end = 10;
 
 chrome.runtime.sendMessage({
   type: "fetchPage",
@@ -82,26 +117,42 @@ chrome.runtime.sendMessage({
         return newPrice;
       });
 
-      let totalPrice = 0;
-      for (let i = start - 1; i < totalCount; i++) {
-        totalPrice += transformedPrices[i];
-      }
-
-      const formattedTotalPrice = totalPrice.toLocaleString();
+      const totalPrice = calcTotalPrice(totalCount, transformedPrices);
 
       const targetXpath = '//*[@id="pbBlock40906"]/div[2]/div[2]';
       const targetElement = getElementByXPath(targetXpath, document);
 
       const totalPriceElement = document.createElement('div');
+      const listElement = createListText(totalCount, transformedPrices, data);
       totalPriceElement.innerHTML = `
-        <div class="productPurchase__listItem">
-          <dt>セット金額：</dt>
-          <dd>¥<span class="calc_total_price">${formattedTotalPrice}</span></dd>
+        <div class="productPurchase__total">
+          <div>
+            <input id="volumeInput" type="number" min="1" max=${totalCount} value=${totalCount} />
+            巻まで
+          </div>
+          <div class="productPurchase__list">
+            <div class="productPurchase__listItem">
+              <dt>セット金額：</dt>
+              <dd><span class="calc_total_price_ex">¥${totalPrice}</span></dd>
+            </div>
+          </div>
+          <div class="productPurchase__list">
+            <div class="productPurchase__listItem">
+              <dt>巻数</dt>
+              <dd>中古金額</dd>
+            </div>
+          </div>
+          <div class="list_item_ex">${listElement}</div>
         </div>
       `;
 
       if (targetElement) {
         targetElement.appendChild(totalPriceElement);
+
+        const inputElement = document.getElementById('volumeInput');
+        inputElement.addEventListener('change', function() {
+          changeTotalPrice(this.value, transformedPrices, data);
+        });
       } else {
         console.log("Target element not found");
       }

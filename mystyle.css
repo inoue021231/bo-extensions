@@ -1,0 +1,19 @@
+.list_item_ex {
+  max-height: 300px;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+.calc_total_price_ex {
+  font-weight: bold;
+  font-size: large;
+}
+
+.list_old_price_ex {
+  font-weight: bold;
+}
+
+.list_new_price_ex {
+  font-weight: bold;
+  color: red;
+}

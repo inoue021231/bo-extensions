@@ -17,6 +17,10 @@
     {
       "matches": ["https://shopping.bookoff.co.jp/s/*"],
       "js": ["content.js"]
+    },
+    {
+      "matches": ["https://shopping.bookoff.co.jp/s/*"],
+      "css": ["mystyle.css"]
     }
   ]
 }
