@@ -132,17 +132,18 @@ chrome.runtime.sendMessage({
           </div>
           <div class="productPurchase__list">
             <div class="productPurchase__listItem">
-              <dt>セット金額：</dt>
+              <dt>セット価格：</dt>
               <dd><span class="calc_total_price_ex">¥${totalPrice}</span></dd>
             </div>
           </div>
           <div class="productPurchase__list">
             <div class="productPurchase__listItem">
               <dt>巻数</dt>
-              <dd>中古金額</dd>
+              <dd>中古価格</dd>
             </div>
           </div>
           <div class="list_item_ex">${listElement}</div>
+          ※<span class="notes_ex">赤字</span>は推定価格
         </div>
       `;
 
