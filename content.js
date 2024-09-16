@@ -127,7 +127,7 @@ chrome.runtime.sendMessage({
       totalPriceElement.innerHTML = `
         <div class="productPurchase__total">
           <div>
-            <input id="volumeInput" type="number" min="1" max=${totalCount} value=${totalCount} />
+            <input id="volumeInput" class="custom-volume-input" type="number" min="1" max=${totalCount} value=${totalCount} />
             巻まで
           </div>
           <div class="productPurchase__list">
@@ -151,6 +151,18 @@ chrome.runtime.sendMessage({
 
         const inputElement = document.getElementById('volumeInput');
         inputElement.addEventListener('change', function() {
+          const min = parseInt(inputElement.getAttribute('min'), 10);
+          const max = parseInt(inputElement.getAttribute('max'), 10);
+          let value = isNaN(parseInt(this.value, 10)) ? max : parseInt(this.value, 10);
+
+          if (value < min) {
+            value = min;
+          } else if (value > max) {
+            value = max;
+          }
+
+          this.value = value;
+
           changeTotalPrice(this.value, transformedPrices, data);
         });
       } else {

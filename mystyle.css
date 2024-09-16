@@ -17,3 +17,18 @@
   font-weight: bold;
   color: red;
 }
+
+.custom-volume-input {
+  width: 70px;
+  height: 30px;
+  font-size: 18px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 2px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.custom-volume-input:focus {
+  border-color: #007BFF;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
